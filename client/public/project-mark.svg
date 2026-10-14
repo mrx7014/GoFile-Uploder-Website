@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="GoFile Uploader Website mark">
+  <rect width="512" height="512" rx="112" fill="#061a2b"/>
+  <rect x="38" y="38" width="436" height="436" rx="88" fill="#0b2843" stroke="#38c8f4" stroke-opacity=".72" stroke-width="8"/>
+  <path d="M132 165h112M132 220h154M132 275h94" fill="none" stroke="#38c8f4" stroke-linecap="round" stroke-width="15" opacity=".78"/>
+  <path d="M242 333h139m-62-62 62 62-62 62" fill="none" stroke="#f6c945" stroke-linecap="round" stroke-linejoin="round" stroke-width="25"/>
+</svg>
