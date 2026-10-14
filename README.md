@@ -1,45 +1,79 @@
-# GoFile Uploader Website — Direct Link Transfer
+<div align="center">
 
-An English-language, terminal-inspired web app that streams a direct HTTP(S) file URL from its source to GoFile. The browser sends the URL and optional filename to the app; the server streams the file onward without downloading it to the user's device or buffering the complete file in memory.
+# ☁️ GoFile Uploader
 
-## Run locally
+**A clean, fast web interface for uploading files to [GoFile](https://gofile.io) and getting a shareable link in seconds.**
 
-```bash
-pnpm install --frozen-lockfile
-pnpm dev
-```
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmrx7014%2FGoFile-Uploder-Website)
 
-The development server listens on `http://localhost:3000` by default and honors `PORT`.
+![License](https://img.shields.io/github/license/mrx7014/GoFile-Uploder-Website?style=for-the-badge)
+![Stars](https://img.shields.io/github/stars/mrx7014/GoFile-Uploder-Website?style=for-the-badge)
+![Forks](https://img.shields.io/github/forks/mrx7014/GoFile-Uploder-Website?style=for-the-badge)
+![Issues](https://img.shields.io/github/issues/mrx7014/GoFile-Uploder-Website?style=for-the-badge)
 
-Useful project commands:
+</div>
 
-```bash
-pnpm check
-pnpm test
-pnpm build
-pnpm start
-```
+---
 
-No GoFile API key is required for basic guest uploads. The app uses the current upload endpoint at `https://upload.gofile.io/uploadfile` and displays GoFile's returned download page. Automated tests use a local mock server and do not upload files to GoFile.
+## ✨ Overview
 
-## Upload history
+GoFile Uploader is a lightweight website that lets anyone upload files straight to GoFile from the browser, with no account and no clutter. Pick a file, upload it, and copy the download link.
 
-The Terminal offers a **History** view with the latest 100 successful uploads saved in this browser profile using `localStorage`. It stores only the returned GoFile link, filename, completion time, reported size, and available GoFile metadata; it does not retain the source URL, its query string, or file contents. You can copy or open a saved GoFile link and clear the local history with confirmation. Browser-local history is not shared with other browsers or devices. Cross-device, per-user history would need sign-in and authenticated server-side storage; this first version deliberately avoids exposing a global upload history to anonymous visitors.
+It is built to be simple, responsive, and easy to deploy in one click.
 
-## Transfer behavior and security
+## 🚀 Features
 
-The API is `POST /api/upload-from-url`. It returns newline-delimited JSON events for validation, connection, transfer progress, and the final GoFile response. Canceling the browser request aborts both outbound connections.
+- 📤 **Instant uploads** to GoFile directly from the browser
+- 🔗 **Shareable download link** generated right after upload
+- 📋 **One-click copy** for the link
+- 🖱️ **Drag & drop** or file picker
+- 📊 **Upload progress** feedback
+- 📱 **Fully responsive**, works on phones, tablets, and desktops
+- 🌙 **Clean modern UI**
+- ⚡ **One-click deploy** to Vercel
 
-The server accepts HTTP(S) URLs on default ports only. It resolves and pins public IP addresses, blocks private/reserved destinations, rechecks redirects, and does not forward source credentials. It accepts direct file URLs rather than pages that only contain a download button. The browser and server do not log the complete source URL.
+## 🌐 Deploy
 
-## Hosting limits
+Click the button below to deploy your own copy to Vercel in under a minute:
 
-The app does not set a fixed file-size cap and streams bytes rather than buffering whole files. This is not “unlimited”: source hosts can time out, GoFile enforces account quotas and rate limits, and hosting providers have their own network, time, memory, and request limits. GoFile currently documents a 10,000-item cap for free accounts.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmrx7014%2FGoFile-Uploder-Website)
 
-Vercel supports Express applications. The root `app.ts` exports the Express app, `vercel.json` runs the build command, and the build helper copies the Vite output to root `public/` for Vercel's static asset CDN. On Vercel, Express runs as a Function and inherits the provider's execution limits; only the small URL request body is sent to the function, not the file bytes. Vercel Functions document a 4.5 MB payload limit and, on Hobby with Fluid Compute, a 300-second maximum duration. For large files or transfers that may take longer, use a long-running Node/container host. Neither hosting choice overrides GoFile limits.
+Vercel will clone the repository into your GitHub account, build it, and give you a live URL automatically.
 
-Before enabling an anonymous deployment for broad public use, add and configure an abuse-control policy appropriate to the operator's bandwidth and GoFile account. The private source repository and this preview do not by themselves make a deployed site private.
+## 🧰 Built With
 
-## Attribution
+- [GoFile API](https://gofile.io/api)
+- [Vercel](https://vercel.com) for hosting
 
-The upload flow is based on GoFile's public API documentation. This is an independent project and is not affiliated with or endorsed by GoFile.
+## 🔄 How It Works
+
+1. You choose a file in the browser.
+2. The site sends it to the GoFile API.
+3. GoFile stores the file and returns a download page link.
+4. The link is shown on screen so you can copy and share it.
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome.
+
+## ⚠️ Disclaimer
+
+This project is an independent, unofficial interface and is not affiliated with GoFile. Please follow GoFile's terms of service and only upload content you have the right to share.
+
+## 👤 Author
+
+**MRX7014**
+
+- GitHub: [@mrx7014](https://github.com/mrx7014)
+
+## 📄 License
+
+Distributed under the license included in this repository. See the `LICENSE` file for details.
+
+---
+
+<div align="center">
+
+If you like this project, give it a ⭐ on GitHub!
+
+</div>
