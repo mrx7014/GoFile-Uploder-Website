@@ -1,10 +1,10 @@
 import express from "express";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import { uploadFromUrlRoute } from "./server/gofile/route";
-import { createContext } from "./server/_core/context";
-import { registerOAuthRoutes } from "./server/_core/oauth";
-import { publicPlatformScript } from "./server/_core/publicConfig";
-import { appRouter } from "./server/routers";
+import { uploadFromUrlRoute } from "./server/gofile/route.js";
+import { createContext } from "./server/_core/context.js";
+import { registerOAuthRoutes } from "./server/_core/oauth.js";
+import { publicPlatformScript } from "./server/_core/publicConfig.js";
+import { appRouter } from "./server/routers.js";
 
 export function createApplication() {
   const app = express();

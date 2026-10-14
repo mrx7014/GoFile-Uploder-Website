@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { parseSourceUrl } from "./source";
-import { transferUrlToGoFile } from "./transfer";
+import { parseSourceUrl } from "./source.js";
+import { transferUrlToGoFile } from "./transfer.js";
 
 type StreamEvent = Record<string, unknown> & { type: string };
 

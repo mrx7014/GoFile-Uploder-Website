@@ -11,7 +11,7 @@ import {
   resolvePublicTarget,
   sanitizeFileName,
   type SafeTarget,
-} from "./source";
+} from "./source.js";
 
 const GOFILE_UPLOAD_URL = new URL("https://upload.gofile.io/uploadfile");
 const MAX_REDIRECTS = 5;

@@ -15,8 +15,8 @@
  *     }]
  *   });
  */
-import { storagePut } from "../storage";
-import { ENV } from "./env";
+import { storagePut } from "../storage.js";
+import { ENV } from "./env.js";
 
 // Default model for generated sites. "MODEL_GPT_IMAGE_2" is the forge images.v1
 // enum for GPT Image 2 (id: gpt-image-2). If omitted, forge falls back to Gemini 2.5 Flash.
