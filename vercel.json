@@ -1,5 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "express",
-  "buildCommand": "pnpm build"
+  "buildCommand": "pnpm build",
+  "functions": {
+    "app.ts": {
+      "includeFiles": "public/**"
+    }
+  }
 }
