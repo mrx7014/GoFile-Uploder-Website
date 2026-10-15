@@ -84,7 +84,7 @@ Distributed under the license in the [`LICENSE`](LICENSE) file.
 
 ## Author
 
-**MRX7014** — [@mrx7014](https://github.com/mrx7014)
+- [MRX7014](https://github.com/mrx7014)
 
 <div align="center">
 
