@@ -81,7 +81,6 @@ h1 span { color: var(--cyan); }
 .url-input-wrap input::placeholder, .name-input-wrap input::placeholder { color: #59778d; opacity: 1; }
 .url-input-wrap input:disabled, .name-input-wrap input:disabled { cursor: not-allowed; opacity: .62; }
 .field-hint { margin: 8px 0 20px; color: #7995aa; font-size: 10px; line-height: 1.5; }
-.turnstile-box { min-height: 65px; margin: -6px 0 16px; overflow: hidden; }
 .optional-label { margin-top: 0 !important; }
 .optional-label span { color: #7895aa; font-family: var(--mono); font-size: 9px; letter-spacing: .08em; }
 .name-input-wrap { height: 42px; }

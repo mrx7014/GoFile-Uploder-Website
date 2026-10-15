@@ -15,7 +15,6 @@ A terminal-style web app that resolves public download links and streams the fil
 - Cancellation of source and GoFile connections.
 - Browser-local history of the latest 100 confirmed GoFile links.
 - SSRF protections: public-address validation, DNS pinning, credential-free URLs, safe redirects, timeouts and sanitized filenames.
-- Optional Cloudflare Turnstile verification and in-memory per-IP rate limiting for anonymous abuse control.
 
 The browser sends the URL and optional filename. The server streams bytes directly:
 
@@ -38,13 +37,7 @@ Copy `.env.example` to `.env` and set the following before opening the service t
 
 | Variable | Purpose |
 |---|---|
-| `TURNSTILE_SITE_KEY` | Public Cloudflare Turnstile site key sent to the browser. |
-| `TURNSTILE_SECRET_KEY` | Server-only Turnstile verification secret. Required in production. |
-| `RATE_LIMIT_WINDOW_MS` | Optional rate-limit window; defaults to 60 seconds. |
-| `RATE_LIMIT_MAX_REQUESTS` | Optional attempts per IP/window; defaults to 5. |
 | `TRANSFER_SOCKET_IDLE_TIMEOUT_MS` | Optional idle socket timeout; defaults to 30 seconds. |
-
-When `TURNSTILE_SECRET_KEY` is missing, local development remains usable. In production, requests are rejected until Turnstile is configured. Never expose the secret key to the browser.
 
 ## Large files
 
@@ -69,7 +62,6 @@ Request body:
 {
   "url": "https://example.com/file.zip",
   "fileName": "optional-name.zip",
-  "turnstileToken": "optional-in-development"
 }
 ```
 
@@ -89,7 +81,7 @@ pnpm build
 
 ## Security and abuse controls
 
-The server blocks private and reserved network destinations, validates every redirect, pins DNS results for outbound requests, does not forward source credentials, and does not log full source URLs. Turnstile and rate limiting should be enabled before public deployment. For a high-traffic public relay, replace the in-memory limiter with a shared store and add authentication, quotas or a queue.
+The server blocks private and reserved network destinations, validates every redirect, pins DNS results for outbound requests, does not forward source credentials, and does not log full source URLs. The application does not impose a file-size or upload-attempt limit. Provider and hosting limits still apply. Public deployments should add abuse controls separately if anonymous access is enabled.
 
 ## License
 
