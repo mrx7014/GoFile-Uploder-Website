@@ -2,79 +2,92 @@
 
 # ☁️ GoFile Uploader
 
-**A clean, fast web interface for uploading files to [GoFile](https://gofile.io) and getting a shareable link in seconds.**
+### Upload a file. Get a link. Done.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmrx7014%2FGoFile-Uploder-Website)
+A tiny, fast web UI for sending files to [GoFile](https://gofile.io) straight from your browser — no account, no ads, no setup.
 
-![License](https://img.shields.io/github/license/mrx7014/GoFile-Uploder-Website?style=for-the-badge)
-![Stars](https://img.shields.io/github/stars/mrx7014/GoFile-Uploder-Website?style=for-the-badge)
-![Forks](https://img.shields.io/github/forks/mrx7014/GoFile-Uploder-Website?style=for-the-badge)
-![Issues](https://img.shields.io/github/issues/mrx7014/GoFile-Uploder-Website?style=for-the-badge)
+[**🌐 Live Demo**](https://gofile-uploder-website.vercel.app/) · [**🐞 Report a Bug**](https://github.com/mrx7014/GoFile-Uploder-Website/issues) · [**💡 Request a Feature**](https://github.com/mrx7014/GoFile-Uploder-Website/issues)
 
+![License](https://img.shields.io/github/license/mrx7014/GoFile-Uploder-Website?style=flat-square)
+![Stars](https://img.shields.io/github/stars/mrx7014/GoFile-Uploder-Website?style=flat-square)
+![Forks](https://img.shields.io/github/forks/mrx7014/GoFile-Uploder-Website?style=flat-square)
+![Issues](https://img.shields.io/github/issues/mrx7014/GoFile-Uploder-Website?style=flat-square)
 
 </div>
 
 ---
 
-## ✨ Overview
+## Why this exists
 
-GoFile Uploader is a lightweight website that lets anyone upload files straight to GoFile from the browser, with no account and no clutter. Pick a file, upload it, and copy the download link.
+GoFile is great for sharing big files, but you shouldn't need to open a heavy page just to drop a file and grab a link. This project gives you one clean screen that does exactly that, and nothing else. It works well on a phone, which is where most quick shares happen.
 
-It is built to be simple, responsive, and easy to deploy in one click.
+## Features
 
-## 🚀 Features
+| | |
+|---|---|
+| 📤 **Direct upload** | Files go from your browser to GoFile |
+| 🖱️ **Drag & drop** | Or use the regular file picker |
+| 📊 **Live progress** | See the upload as it happens |
+| 🔗 **Instant link** | Shareable download page link right after upload |
+| 📋 **One-tap copy** | Copy the link without selecting text |
+| 📱 **Responsive** | Phones, tablets, desktops |
+| ⚡ **One-click deploy** | Your own copy on Vercel in about a minute |
 
-- 📤 **Instant uploads** to GoFile directly from the browser
-- 🔗 **Shareable download link** generated right after upload
-- 📋 **One-click copy** for the link
-- 🖱️ **Drag & drop** or file picker
-- 📊 **Upload progress** feedback
-- 📱 **Fully responsive**, works on phones, tablets, and desktops
-- 🌙 **Clean modern UI**
-- ⚡ **One-click deploy** to Vercel
+## Quick start
 
-## 🌐 Deploy
-
-Click the button below to deploy your own copy to Vercel in under a minute:
+### Deploy your own
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmrx7014%2FGoFile-Uploder-Website)
 
-Vercel will clone the repository into your GitHub account, build it, and give you a live URL automatically.
+Vercel clones the repo into your GitHub account, builds it, and gives you a live URL.
 
-## 🧰 Built With
+## How it works
 
-- [GoFile API](https://gofile.io/api)
-- [Vercel](https://vercel.com) for hosting
+```
+Browser ──► GoFile API ──► Download page link ──► Shown on screen
+  pick        uploads        returned by            copy &
+  a file      the file       GoFile                 share
+```
 
-## 🔄 How It Works
+1. You pick or drop a file.
+2. The site uploads it to the GoFile API and tracks progress.
+3. GoFile stores the file and returns a download page URL.
+4. The URL is displayed so you can copy and share it.
 
-1. You choose a file in the browser.
-2. The site sends it to the GoFile API.
-3. GoFile stores the file and returns a download page link.
-4. The link is shown on screen so you can copy and share it.
+## Project structure
 
-## 🤝 Contributing
+```
+GoFile-Uploder-Website/
+├── index.html      # UI
+├── ...             # scripts / styles
+└── README.md
+```
 
-Contributions, issues, and feature requests are welcome.
+<!-- Update this tree to match the real files in the repo -->
 
-## ⚠️ Disclaimer
+Have an idea? [Open an issue](https://github.com/mrx7014/GoFile-Uploder-Website/issues).
 
-This project is an independent, unofficial interface and is not affiliated with GoFile. Please follow GoFile's terms of service and only upload content you have the right to share.
+## Contributing
 
-## 👤 Author
+1. Fork the repo
+2. Create a branch: `git checkout -b feature/my-idea`
+3. Commit your changes: `git commit -m "Add my idea"`
+4. Push and open a Pull Request
 
-**MRX7014**
+## Disclaimer
 
-- GitHub: [@mrx7014](https://github.com/mrx7014)
+This is an independent, unofficial project and is **not affiliated with GoFile**. Follow GoFile's terms of service and only upload content you have the right to share.
 
-## 📄 License
+## License
 
-Distributed under the license included in this repository. See the `LICENSE` file for details.
+Distributed under the license in the [`LICENSE`](LICENSE) file.
 
----
+## Author
+
+**MRX7014** — [@mrx7014](https://github.com/mrx7014)
 
 <div align="center">
 
-If you like this project, give it a ⭐ on GitHub!
+If this saved you time, a ⭐ on the repo means a lot.
 
 </div>
