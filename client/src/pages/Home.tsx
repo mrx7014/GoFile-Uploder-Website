@@ -149,6 +149,7 @@ export default function Home() {
     logEndRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }, [logs]);
 
+
   const consumeEvent = useCallback((event: Record<string, unknown>) => {
     if (event.type === "stage" && typeof event.stage === "string" && event.stage in STAGE_COPY) {
       const nextStage = event.stage as Stage;
@@ -191,7 +192,7 @@ export default function Home() {
     event?.preventDefault();
     const trimmedUrl = url.trim();
     if (!trimmedUrl) {
-      setErrorMessage("Paste a direct HTTP or HTTPS file URL first.");
+      setErrorMessage("Paste a public HTTP or HTTPS file or download-page URL first.");
       setPhase("error");
       return;
     }
@@ -382,7 +383,7 @@ export default function Home() {
             </div>
 
             <form onSubmit={startTransfer} className="transfer-form">
-              <label htmlFor="source-url">Direct file URL</label>
+              <label htmlFor="source-url">File or download-page URL</label>
               <div className="url-input-wrap">
                 <Link2 size={16} aria-hidden="true" />
                 <input
@@ -397,7 +398,7 @@ export default function Home() {
                   required
                 />
               </div>
-              <p className="field-hint">Use a direct HTTP(S) download link, not a web page that contains a download button.</p>
+              <p className="field-hint">Direct links and public MediaFire, Google Drive, SourceForge or Pixeldrain pages are supported.</p>
 
               <label htmlFor="output-name" className="optional-label">Output filename <span>OPTIONAL</span></label>
               <div className="name-input-wrap">

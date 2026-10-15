@@ -8,7 +8,13 @@ export function createApplication() {
   app.use(express.json({ limit: "64kb" }));
   app.use(express.urlencoded({ limit: "64kb", extended: true }));
   app.get("/api/health", (_request, response) => response.json({ status: "ok" }));
-  app.post("/api/upload-from-url", uploadFromUrlRoute);
+  app.post("/api/upload-from-url", async (request, response, next) => {
+    try {
+      await uploadFromUrlRoute(request, response);
+    } catch (error) {
+      next(error);
+    }
+  });
 
   const publicDirectory = path.resolve(process.cwd(), "public");
   app.use(express.static(publicDirectory, { index: false }));

@@ -1,93 +1,88 @@
-<div align="center">
+# GoFile Uploader Website
 
-# ☁️ GoFile Uploader
+A terminal-style web app that resolves public download links and streams the file to GoFile without downloading it to the visitor's device or buffering the whole file in memory.
 
-### Upload a file. Get a link. Done.
+> Independent and unofficial. It is not affiliated with GoFile. Only transfer files you have the right to share.
 
-A tiny, fast web UI for sending files to [GoFile](https://gofile.io) straight from your browser — no account, no ads, no setup.
+## What it supports
 
-[**🌐 Live Demo**](https://gofile-uploder-website.vercel.app/) · [**🐞 Report a Bug**](https://github.com/mrx7014/GoFile-Uploder-Website/issues) · [**💡 Request a Feature**](https://github.com/mrx7014/GoFile-Uploder-Website/issues)
+- Direct HTTP(S) file URLs.
+- Public MediaFire page URLs (static direct-link extraction).
+- Public Google Drive links using the file ID.
+- SourceForge links through safe redirect handling.
+- Public Pixeldrain links through its download endpoint.
+- Live NDJSON status events and truthful progress when `Content-Length` is available.
+- Cancellation of source and GoFile connections.
+- Browser-local history of the latest 100 confirmed GoFile links.
+- SSRF protections: public-address validation, DNS pinning, credential-free URLs, safe redirects, timeouts and sanitized filenames.
 
-![License](https://img.shields.io/github/license/mrx7014/GoFile-Uploder-Website?style=flat-square)
-![Stars](https://img.shields.io/github/stars/mrx7014/GoFile-Uploder-Website?style=flat-square)
-![Forks](https://img.shields.io/github/forks/mrx7014/GoFile-Uploder-Website?style=flat-square)
-![Issues](https://img.shields.io/github/issues/mrx7014/GoFile-Uploder-Website?style=flat-square)
+The browser sends the URL and optional filename. The server streams bytes directly:
 
-</div>
+```text
+Browser → Express resolver/checks → source stream → GoFile upload API
+```
 
----
+## Run locally
 
-## Why this exists
+```bash
+pnpm install --frozen-lockfile
+pnpm dev
+```
 
-GoFile is great for sharing big files, but you shouldn't need to open a heavy page just to drop a file and grab a link. This project gives you one clean screen that does exactly that, and nothing else. It works well on a phone, which is where most quick shares happen.
+Open `http://localhost:3000`.
 
-## Features
+## Production configuration
 
-| | |
+Copy `.env.example` to `.env` and set the following before opening the service to the public:
+
+| Variable | Purpose |
 |---|---|
-| 📤 **Direct upload** | Files go from your browser to GoFile |
-| 🖱️ **Drag & drop** | Or use the regular file picker |
-| 📊 **Live progress** | See the upload as it happens |
-| 🔗 **Instant link** | Shareable download page link right after upload |
-| 📋 **One-tap copy** | Copy the link without selecting text |
-| 📱 **Responsive** | Phones, tablets, desktops |
-| ⚡ **One-click deploy** | Your own copy on Vercel in about a minute |
+| `TRANSFER_SOCKET_IDLE_TIMEOUT_MS` | Optional idle socket timeout; defaults to 30 seconds. |
 
-## Quick start
+## Large files
 
-### Deploy your own
+The transfer path is stream-based and does not impose an application-level file-size cap or store the complete file in memory. Real limits still come from the source, GoFile and the hosting provider.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmrx7014%2FGoFile-Uploder-Website)
+For very large or long-running transfers, use the included Docker image or a long-running Node/VPS/container host:
 
-Vercel clones the repo into your GitHub account, builds it, and gives you a live URL.
-
-## How it works
-
-```
-Browser ──► GoFile API ──► Download page link ──► Shown on screen
-  pick        uploads        returned by            copy &
-  a file      the file       GoFile                 share
+```bash
+docker build -t gofile-uploader .
+docker run --env-file .env -p 3000:3000 gofile-uploader
 ```
 
-1. You pick or drop a file.
-2. The site uploads it to the GoFile API and tracks progress.
-3. GoFile stores the file and returns a download page URL.
-4. The URL is displayed so you can copy and share it.
+Vercel can deploy the Express app, but its serverless execution duration and runtime limits make it unsuitable for guaranteeing very large transfers. Posting only a URL avoids sending file bytes in the request body; it does not remove the function duration limit.
 
-## Project structure
+## API
 
+### `POST /api/upload-from-url`
+
+Request body:
+
+```json
+{
+  "url": "https://example.com/file.zip",
+  "fileName": "optional-name.zip",
+}
 ```
-GoFile-Uploder-Website/
-├── index.html      # UI
-├── ...             # scripts / styles
-└── README.md
+
+The response is newline-delimited JSON (`application/x-ndjson`) with `stage`, `progress`, `result`, `error` or `cancelled` events.
+
+### `GET /api/health`
+
+Returns `{ "status": "ok" }`.
+
+## Development checks
+
+```bash
+pnpm check
+pnpm test
+pnpm build
 ```
 
-<!-- Update this tree to match the real files in the repo -->
+## Security and abuse controls
 
-Have an idea? [Open an issue](https://github.com/mrx7014/GoFile-Uploder-Website/issues).
-
-## Contributing
-
-1. Fork the repo
-2. Create a branch: `git checkout -b feature/my-idea`
-3. Commit your changes: `git commit -m "Add my idea"`
-4. Push and open a Pull Request
-
-## Disclaimer
-
-This is an independent, unofficial project and is **not affiliated with GoFile**. Follow GoFile's terms of service and only upload content you have the right to share.
+The server blocks private and reserved network destinations, validates every redirect, pins DNS results for outbound requests, does not forward source credentials, and does not log full source URLs. The application does not impose a file-size or upload-attempt limit. Provider and hosting limits still apply. Public deployments should add abuse controls separately if anonymous access is enabled.
 
 ## License
 
-Distributed under the license in the [`LICENSE`](LICENSE) file.
-
-## Author
-
-- [MRX7014](https://github.com/mrx7014)
-
-<div align="center">
-
-If this saved you time, a ⭐ on the repo means a lot.
-
-</div>
+MIT — see [`LICENSE`](LICENSE).
