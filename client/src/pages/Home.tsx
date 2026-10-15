@@ -110,6 +110,7 @@ export default function Home() {
     }
   });
   const [historyAvailable, setHistoryAvailable] = useState(true);
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [logs, setLogs] = useState<LogEntry[]>([
     { id: 1, time: clockTime(), text: "GoFile Uploader Website relay interface initialized", tone: "muted" },
     { id: 2, time: clockTime(), text: "Awaiting a direct file URL…", tone: "active" },
@@ -117,6 +118,8 @@ export default function Home() {
   const controllerRef = useRef<AbortController | null>(null);
   const cancelRequestedRef = useRef(false);
   const logEndRef = useRef<HTMLDivElement | null>(null);
+  const turnstileRef = useRef<HTMLDivElement | null>(null);
+  const turnstileWidgetRef = useRef<string | null>(null);
   const nextLogId = useRef(3);
 
   const appendLog = useCallback((text: string, tone: LogTone = "muted") => {
@@ -148,6 +151,31 @@ export default function Home() {
   useEffect(() => {
     logEndRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }, [logs]);
+
+  useEffect(() => {
+    const siteKey = window.__MANUS_CONFIG__?.turnstileSiteKey;
+    if (!siteKey || !turnstileRef.current) return;
+    const render = () => {
+      if (!window.turnstile || !turnstileRef.current || turnstileWidgetRef.current) return;
+      turnstileWidgetRef.current = window.turnstile.render(turnstileRef.current, {
+        sitekey: siteKey,
+        theme: "dark",
+        callback: (token) => setTurnstileToken(token),
+        "expired-callback": () => setTurnstileToken(""),
+        "error-callback": () => setTurnstileToken(""),
+      });
+    };
+    if (window.turnstile) render();
+    else {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      script.async = true;
+      script.defer = true;
+      script.addEventListener("load", render);
+      document.head.appendChild(script);
+      return () => script.removeEventListener("load", render);
+    }
+  }, []);
 
   const consumeEvent = useCallback((event: Record<string, unknown>) => {
     if (event.type === "stage" && typeof event.stage === "string" && event.stage in STAGE_COPY) {
@@ -191,7 +219,7 @@ export default function Home() {
     event?.preventDefault();
     const trimmedUrl = url.trim();
     if (!trimmedUrl) {
-      setErrorMessage("Paste a direct HTTP or HTTPS file URL first.");
+      setErrorMessage("Paste a public HTTP or HTTPS file or download-page URL first.");
       setPhase("error");
       return;
     }
@@ -212,6 +240,11 @@ export default function Home() {
     setResult(null);
     setErrorMessage("");
     setCopied(false);
+    if (window.__MANUS_CONFIG__?.turnstileSiteKey && !turnstileToken) {
+      setErrorMessage("Complete the anti-abuse check before starting a transfer.");
+      setPhase("error");
+      return;
+    }
     cancelRequestedRef.current = false;
     appendLog(`$ enqueue --source ${sourceHost(trimmedUrl)}`, "command");
     const controller = new AbortController();
@@ -221,7 +254,7 @@ export default function Home() {
       const response = await fetch("/api/upload-from-url", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/x-ndjson" },
-        body: JSON.stringify({ url: trimmedUrl, fileName: fileName.trim() || undefined }),
+        body: JSON.stringify({ url: trimmedUrl, fileName: fileName.trim() || undefined, turnstileToken: turnstileToken || undefined }),
         signal: controller.signal,
       });
 
@@ -280,7 +313,7 @@ export default function Home() {
     } finally {
       controllerRef.current = null;
     }
-  }, [appendLog, consumeEvent, fileName, url]);
+  }, [appendLog, consumeEvent, fileName, turnstileToken, url]);
 
   const cancelTransfer = () => {
     cancelRequestedRef.current = true;
@@ -382,7 +415,7 @@ export default function Home() {
             </div>
 
             <form onSubmit={startTransfer} className="transfer-form">
-              <label htmlFor="source-url">Direct file URL</label>
+              <label htmlFor="source-url">File or download-page URL</label>
               <div className="url-input-wrap">
                 <Link2 size={16} aria-hidden="true" />
                 <input
@@ -397,7 +430,8 @@ export default function Home() {
                   required
                 />
               </div>
-              <p className="field-hint">Use a direct HTTP(S) download link, not a web page that contains a download button.</p>
+              <p className="field-hint">Direct links and public MediaFire, Google Drive, SourceForge or Pixeldrain pages are supported.</p>
+              {window.__MANUS_CONFIG__?.turnstileSiteKey && <div ref={turnstileRef} className="turnstile-box" aria-label="Anti-abuse verification" />}
 
               <label htmlFor="output-name" className="optional-label">Output filename <span>OPTIONAL</span></label>
               <div className="name-input-wrap">

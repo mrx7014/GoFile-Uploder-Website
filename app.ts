@@ -6,6 +6,7 @@ import { createContext } from "./server/_core/context.js";
 import { registerOAuthRoutes } from "./server/_core/oauth.js";
 import { publicPlatformScript } from "./server/_core/publicConfig.js";
 import { appRouter } from "./server/routers.js";
+import { consumeRateLimit, verifyTurnstileToken } from "./server/gofile/abuse.js";
 
 export function createApplication() {
   const app = express();
@@ -16,7 +17,24 @@ export function createApplication() {
   app.get("/api/platform/config.js", (_request, response) => {
     response.set("Cache-Control", "no-store").type("application/javascript").send(publicPlatformScript());
   });
-  app.post("/api/upload-from-url", uploadFromUrlRoute);
+  app.post("/api/upload-from-url", async (request, response, next) => {
+    const limit = consumeRateLimit(request);
+    if (!limit.allowed) {
+      response.setHeader("Retry-After", String(limit.retryAfter));
+      response.status(429).json({ error: "Too many transfer attempts. Please wait and try again." });
+      return;
+    }
+    const token = (request.body as { turnstileToken?: unknown } | undefined)?.turnstileToken;
+    if (!(await verifyTurnstileToken(request, token))) {
+      response.status(403).json({ error: "Please complete the anti-abuse check before starting a transfer." });
+      return;
+    }
+    try {
+      await uploadFromUrlRoute(request, response);
+    } catch (error) {
+      next(error);
+    }
+  });
   registerOAuthRoutes(app);
   app.use(
     "/api/trpc",

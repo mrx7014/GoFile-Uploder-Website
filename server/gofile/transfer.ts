@@ -12,10 +12,11 @@ import {
   sanitizeFileName,
   type SafeTarget,
 } from "./source.js";
+import { resolveProviderSource } from "./providers.js";
 
 const GOFILE_UPLOAD_URL = new URL("https://upload.gofile.io/uploadfile");
 const MAX_REDIRECTS = 5;
-const SOCKET_IDLE_TIMEOUT_MS = 30_000;
+const SOCKET_IDLE_TIMEOUT_MS = Number(process.env.TRANSFER_SOCKET_IDLE_TIMEOUT_MS ?? 30_000);
 
 export type TransferProgress = {
   bytesTransferred: number;
@@ -251,7 +252,8 @@ export async function transferUrlToGoFile(
   hooks: TransferHooks,
 ): Promise<GoFileResult> {
   hooks.onStage("checking");
-  const parsed = parseSourceUrl(inputUrl);
+  const resolved = await resolveProviderSource(inputUrl, signal);
+  const parsed = parseSourceUrl(resolved.url);
   hooks.onStage("connecting");
   const { response: source, url } = await openSource(parsed.href, signal);
   const fileName = typeof requestedName === "string" && requestedName.trim()
